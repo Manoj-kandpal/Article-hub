@@ -20,7 +20,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Table(name = "Article")
+@Table(name = "article")
 public class ArticleEntity {
 
     @Id
@@ -28,18 +28,22 @@ public class ArticleEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "title")
     private String title;
 
-    @Column
+    @Column(name = "description")
     private String description;
 
-    @Column
-    private LocalDateTime creationDate;
-
-    @Column
+    //to be changed to user who liked
+    @Column(name = "number_of_likes")
     private int numberOfLikes;
 
-    @Column
+    @Column(name = "importance")
     private String importance;
+
+    @Column(name = "creation_date")
+    private LocalDateTime creationDateTime;
+
+    @Column(name = "update_date")
+    private LocalDateTime updateDateTime;
 }

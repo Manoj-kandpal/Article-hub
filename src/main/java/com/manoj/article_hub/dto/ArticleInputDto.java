@@ -14,6 +14,5 @@ import lombok.ToString;
 public class ArticleInputDto {
     private String title;
     private String description;
-    private int numberOfLikes;
     private String importance;
 }
