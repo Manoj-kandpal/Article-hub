@@ -1,4 +1,4 @@
-package com.manoj.article_hub.dto;
+package com.manoj.article_hub.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,9 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDto {
-    private long id;
-    private String title;
+public class UserCreationDto {
+    private String firstName;
+    private String LastName;
+    private String email;
+    private String password;
 }

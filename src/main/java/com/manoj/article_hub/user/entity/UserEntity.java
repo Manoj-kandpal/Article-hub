@@ -1,38 +1,41 @@
-package com.manoj.article_hub.entity;
+package com.manoj.article_hub.user.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
-@Table(name = "user")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+@ToString
+@Table(name = "users")
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "id", unique = true, nullable = false, updatable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "first_name")
     private String firstName;
 
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "username")
+    @NotNull
+    @Column(name = "username", unique = true)
     private String username;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, optional = false)
-    private UserCredentialsEntity userCredentialsEntity;
 }

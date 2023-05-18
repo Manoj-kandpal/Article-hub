@@ -1,4 +1,4 @@
-package com.manoj.article_hub.entity;
+package com.manoj.article_hub.article.entity;
 
 import java.time.LocalDateTime;
 
@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,26 +25,30 @@ import lombok.ToString;
 public class ArticleEntity {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false, insertable = false, updatable = false)
     private Long id;
 
+    @NotNull
     @Column(name = "title")
     private String title;
 
+    @NotNull
     @Column(name = "description")
     private String description;
 
     //to be changed to user who liked
     @Column(name = "number_of_likes")
-    private int numberOfLikes;
+    private int numberOfLikes = 0;
 
     @Column(name = "importance")
     private String importance;
 
-    @Column(name = "creation_date")
+    @NotNull
+    @Column(name = "creation_date", updatable = false)
     private LocalDateTime creationDateTime;
 
+    @NotNull
     @Column(name = "update_date")
     private LocalDateTime updateDateTime;
 }

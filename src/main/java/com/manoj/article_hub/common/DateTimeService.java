@@ -1,13 +1,13 @@
-package com.manoj.article_hub.service;
+package com.manoj.article_hub.common;
 
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
 
 @Service
-public class LocalDateTimeService {
+public class DateTimeService {
 
-    public LocalDateTime getCurrentDateTime() {
+    public LocalDateTime getCurrentDateTimeLocal() {
         return LocalDateTime.now();
     }
 }
