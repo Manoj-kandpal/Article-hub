@@ -1,8 +1,11 @@
 package com.manoj.article_hub.user.service;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.Validate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.manoj.article_hub.common.HasLogger;
 import com.manoj.article_hub.exception.WrongCredentialsException;
@@ -24,6 +27,7 @@ public class UserService implements HasLogger {
     @Autowired
     private UserCredentialsService userCredentialsService;
 
+    @Transactional
     public UserDto addUser(UserCreationDto data) {
         if (data == null) {
             getLogger().error("User can't be created if data is null");
@@ -37,6 +41,7 @@ public class UserService implements HasLogger {
         return userMapper.toDto(savedEntity);
     }
 
+    @Transactional(readOnly = true)
     public UserDto loginUser(UserLoginDto data) {
         Validate.notNull(data, "Login details can't be null");
 
@@ -50,5 +55,10 @@ public class UserService implements HasLogger {
         } else {
             throw new WrongCredentialsException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<UserEntity> checkUserExist(Long id) {
+        return userRepository.findById(id);
     }
 }

@@ -20,6 +20,7 @@ import com.manoj.article_hub.user.service.UserService;
 public class UserController implements HasLogger {
     public static final String ENDPOINT_PATH_ROOT = "/api/user";
     public static final String ENDPOINT_PATH_LOGIN = "/login";
+    public static final String ENDPOINT_PATH_UPDATE = "/update";
 
     @Autowired
     private UserService userService;
@@ -51,4 +52,11 @@ public class UserController implements HasLogger {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    //to do:
+//    updating user should be logged in first
+//    what attributes we want to update( keeping in mind that email or something should not be allowed to change)
+
+//    @PutMapping(ENDPOINT_PATH_UPDATE)
+//    public ResponseEntity<?> updateUser(@RequestBody )
 }

@@ -14,18 +14,24 @@ import com.manoj.article_hub.article.repository.ArticleRepository;
 import com.manoj.article_hub.common.DateTimeService;
 import com.manoj.article_hub.common.HasLogger;
 import com.manoj.article_hub.exception.NotFoundException;
+import com.manoj.article_hub.user.entity.UserEntity;
+import com.manoj.article_hub.user.service.UserService;
 
 @Service
 public class ArticleService implements HasLogger {
 
     private static final String ARTICLE_IS_NOT_AVAILABLE = "Article with ID {} is not available.";
     private static final String ARTICLE_DELETED = "Article with title {} deleted.";
+    private static final String USER_DOES_NOT_EXIST = "User with id {} doesn't exist.";
 
     @Autowired
     private ArticleRepository articleRepository;
 
     @Autowired
     private DateTimeService dateTimeService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ArticleMapper mapper;
@@ -42,10 +48,17 @@ public class ArticleService implements HasLogger {
             return null;
         }
         //to add validations that our data has the non-null fields or not!!
-        ArticleEntity entity = mapper.toEntity(data);
-        ArticleEntity savedArticle = articleRepository.saveAndFlush(entity);
-        getLogger().info("Article {} created.", savedArticle.getTitle());
-        return savedArticle;
+        Optional<UserEntity> author = userService.checkUserExist(data.getUserId());
+        if (author.isPresent()) {
+            ArticleEntity entity = mapper.toEntity(data, author.get());
+            ArticleEntity savedArticle = articleRepository.saveAndFlush(entity);
+            getLogger().info("Article {} created.", savedArticle.getTitle());
+            return savedArticle;
+        } else {
+            getLogger().error(USER_DOES_NOT_EXIST, data.getUserId());
+            throw new NotFoundException("User", "Id", data.getUserId());
+        }
+
     }
 
     @Transactional

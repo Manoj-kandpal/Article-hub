@@ -2,11 +2,16 @@ package com.manoj.article_hub.article.entity;
 
 import java.time.LocalDateTime;
 
+import com.manoj.article_hub.user.entity.UserEntity;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -51,4 +56,9 @@ public class ArticleEntity {
     @NotNull
     @Column(name = "update_date")
     private LocalDateTime updateDateTime;
+
+    @NotNull
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "user_id")
+    private UserEntity createdBy;
 }
