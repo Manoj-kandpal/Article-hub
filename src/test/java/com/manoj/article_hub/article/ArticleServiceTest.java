@@ -6,6 +6,7 @@ import com.manoj.article_hub.article.mapper.ArticleMapper;
 import com.manoj.article_hub.article.repository.ArticleRepository;
 import com.manoj.article_hub.article.service.ArticleService;
 import com.manoj.article_hub.article.utils.ArticleTestUtil;
+import com.manoj.article_hub.common.DateTimeService;
 import com.manoj.article_hub.exception.NotFoundException;
 import com.manoj.article_hub.user.entity.UserEntity;
 import com.manoj.article_hub.user.service.UserService;
@@ -19,8 +20,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ArticleServiceTest {
@@ -36,6 +45,9 @@ public class ArticleServiceTest {
     @Mock
     private ArticleMapper articleMapper;
 
+    @Mock
+    private DateTimeService dateTimeService;
+
     @InjectMocks
     private ArticleService testee;
 
@@ -50,7 +62,7 @@ public class ArticleServiceTest {
     @Test
     public void testGetAllArticles() {
         List<ArticleEntity> articles = testee.getAllArticles();
-        Assert.assertNotNull(articles);
+        assertNotNull(articles);
         Assert.assertEquals(1, articles.size());
     }
 
@@ -81,6 +93,68 @@ public class ArticleServiceTest {
 
         ArticleEntity result = testee.create(articleDto);
 
-        Assert.assertNotNull(result);
+        assertNotNull(result);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void testDeleteArticleWhenArticleNotFound() {
+        Mockito.when(articleRepository.findById(eq(ArticleTestUtil.ARTICLE_ID))).thenReturn(Optional.empty());
+
+        testee.deleteArticle(ArticleTestUtil.ARTICLE_ID);
+    }
+
+    @Test
+    public void testDeleteArticle() {
+        ArticleEntity article = ArticleTestUtil.createArticle();
+
+        Mockito.when(articleRepository.findById(eq(ArticleTestUtil.ARTICLE_ID))).thenReturn(Optional.of(article));
+
+        Optional<ArticleEntity> result = testee.deleteArticle(ArticleTestUtil.ARTICLE_ID);
+
+        assertNotNull(result);
+        Assert.assertTrue(result.isPresent());
+        verify(articleRepository,Mockito.times(1)).delete(article);
+    }
+
+    @Test
+    public void testEditArticleWhenNoDataIsProvided() {
+        ArticleEntity result = testee.editArticle(ArticleTestUtil.ARTICLE_ID, null);
+
+        Assert.assertNull(result);
+    }
+
+    @Test
+    public void testEditArticleWhenArticleNotFound() {
+        Mockito.when(articleRepository.findById(eq(ArticleTestUtil.ARTICLE_ID))).thenReturn(Optional.empty());
+
+        ArticleEntity result = testee.editArticle(ArticleTestUtil.ARTICLE_ID, ArticleTestUtil.createArticleDto());
+
+        Assert.assertNull(result);
+    }
+
+    @Test
+    public void testEditArticle() {
+        CreateArticleDto updatedArticle = ArticleTestUtil.createArticleDto();
+        updatedArticle.setTitle("Updated Title");
+        updatedArticle.setDescription("Updated Description.");
+        ArticleEntity existingArticle = ArticleTestUtil.createArticle();
+        LocalDateTime modifiedTime = LocalDateTime.of(2023,07,19,15,15);
+
+        ArticleEntity modifiedArticle = ArticleTestUtil.createArticle();
+        modifiedArticle.setTitle("Updated Title");
+        modifiedArticle.setDescription("Updated Description.");
+        modifiedArticle.setUpdateDateTime(modifiedTime);
+
+        Mockito.when(articleRepository.findById(eq(ArticleTestUtil.ARTICLE_ID))).thenReturn(Optional.of(existingArticle));
+        Mockito.when(dateTimeService.getCurrentDateTimeLocal()).thenReturn(modifiedTime);
+        Mockito.when(articleRepository.save(eq(modifiedArticle))).thenReturn(modifiedArticle);
+
+        ArticleEntity result = testee.editArticle(ArticleTestUtil.ARTICLE_ID, updatedArticle);
+
+        verify(articleRepository, times(1)).save(eq(modifiedArticle));
+        assertNotNull(result);
+        assertEquals("Updated Title", result.getTitle());
+        assertEquals("Updated Description.", result.getDescription());
+        assertNotEquals(modifiedTime, result.getUpdateDateTime());
     }
 }
