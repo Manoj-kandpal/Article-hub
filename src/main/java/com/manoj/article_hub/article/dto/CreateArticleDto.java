@@ -1,4 +1,4 @@
-package com.manoj.article_hub.dto;
+package com.manoj.article_hub.article.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,9 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArticleDto {
-    private long id;
+public class CreateArticleDto {
     private String title;
+    private String description;
+    private String importance;
+    private Long userId;
 }
