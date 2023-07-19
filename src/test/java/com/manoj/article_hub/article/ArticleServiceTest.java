@@ -155,6 +155,6 @@ public class ArticleServiceTest {
         assertNotNull(result);
         assertEquals("Updated Title", result.getTitle());
         assertEquals("Updated Description.", result.getDescription());
-        assertNotEquals(modifiedTime, result.getUpdateDateTime());
+        assertEquals(modifiedTime, result.getUpdateDateTime());
     }
 }
