@@ -1,3 +1,6 @@
+- master Coverage: [![codecov](https://codecov.io/gh/Manoj-kandpal/Article-hub/branch/master/graph/badge.svg)](https://codecov.io/gh/Manoj-kandpal/Article-hub)
+- dev Coverage: [![codecov](https://codecov.io/gh/Manoj-kandpal/Article-hub/branch/dev/graph/badge.svg)](https://codecov.io/gh/Manoj-kandpal/Article-hub)
+
 # ARTICLE-HUB
 
 A web-application for article management
