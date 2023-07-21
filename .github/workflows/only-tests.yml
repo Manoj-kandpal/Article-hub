@@ -1,0 +1,28 @@
+name: Only Tests
+
+on:
+  push:
+    branches-ignore:
+      - master
+      - main
+
+jobs:
+  run-all-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml -DskipTests
+
+      - name: All the Tests and Coverage Checks
+        run: mvn clean install
