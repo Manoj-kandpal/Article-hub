@@ -25,4 +25,7 @@ jobs:
         run: mvn -B package --file pom.xml -DskipTests
 
       - name: All the Tests and Coverage Checks
-        run: mvn clean install
+        run: mvn -B test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
