@@ -1,4 +1,4 @@
- [![codecov](https://codecov.io/gh/Manoj-kandpal/Article-hub/branch/dev/graph/badge.svg)](https://codecov.io/gh/Manoj-kandpal/Article-hub)
+ [![codecov](https://codecov.io/gh/Manoj-kandpal/Article-hub/branch/master/graph/badge.svg)](https://codecov.io/gh/Manoj-kandpal/Article-hub)
 
 # ARTICLE-HUB
 
