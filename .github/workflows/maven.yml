@@ -31,6 +31,10 @@ jobs:
       run: mvn -B package --file pom.xml -DskipTests
     - name: Unit Tests
       run: mvn test
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 #     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
 #     - name: Update dependency graph

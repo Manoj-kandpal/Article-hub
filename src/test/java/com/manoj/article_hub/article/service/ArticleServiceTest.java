@@ -1,10 +1,9 @@
-package com.manoj.article_hub.article;
+package com.manoj.article_hub.article.service;
 
 import com.manoj.article_hub.article.dto.CreateArticleDto;
 import com.manoj.article_hub.article.entity.ArticleEntity;
 import com.manoj.article_hub.article.mapper.ArticleMapper;
 import com.manoj.article_hub.article.repository.ArticleRepository;
-import com.manoj.article_hub.article.service.ArticleService;
 import com.manoj.article_hub.article.utils.ArticleTestUtil;
 import com.manoj.article_hub.common.DateTimeService;
 import com.manoj.article_hub.exception.NotFoundException;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
