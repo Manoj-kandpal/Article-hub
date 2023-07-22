@@ -16,4 +16,11 @@ public class UserTestUtil {
                 .username(EMAIL)
                 .build();
     }
+
+    public static UserEntity createUserWithoutUserId () {
+        return UserEntity.builder()
+                .firstName(FIRST_NAME)
+                .username(EMAIL)
+                .build();
+    }
 }
