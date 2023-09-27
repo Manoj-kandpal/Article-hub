@@ -1,8 +1,6 @@
 package com.manoj.article_hub.user.service;
 
-import com.manoj.article_hub.user.entity.UserCredentialsEntity;
 import com.manoj.article_hub.user.entity.UserEntity;
-import com.manoj.article_hub.user.repository.UserCredentialsRepository;
 import com.manoj.article_hub.user.utils.UserTestUtil;
 import org.junit.Assert;
 import org.junit.Before;

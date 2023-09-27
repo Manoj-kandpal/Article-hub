@@ -10,4 +10,5 @@ public class ArticleHubApplication {
         SpringApplication.run(ArticleHubApplication.class, args);
     }
 
+
 }

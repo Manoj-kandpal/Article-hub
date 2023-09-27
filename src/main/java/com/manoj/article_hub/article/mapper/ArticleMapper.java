@@ -8,7 +8,7 @@ import com.manoj.article_hub.article.dto.CreateArticleDto;
 import com.manoj.article_hub.article.entity.ArticleEntity;
 import com.manoj.article_hub.common.DateTimeService;
 import com.manoj.article_hub.common.HasLogger;
-import com.manoj.article_hub.common.MapperConfig;
+import com.manoj.article_hub.config.MapperConfig;
 import com.manoj.article_hub.user.entity.UserEntity;
 
 @Mapper(config = MapperConfig.class)

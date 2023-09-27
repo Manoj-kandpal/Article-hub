@@ -1,4 +1,4 @@
-package com.manoj.article_hub.common;
+package com.manoj.article_hub.config;
 
 import org.mapstruct.NullValueMappingStrategy;
 import org.mapstruct.ReportingPolicy;

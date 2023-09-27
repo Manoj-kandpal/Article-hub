@@ -6,8 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import com.manoj.article_hub.user.entity.UserEntity;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
-    UserEntity getUserByUsername(@Param("email") String email);
+    Optional<UserEntity> findByUsername(String username);
 }
