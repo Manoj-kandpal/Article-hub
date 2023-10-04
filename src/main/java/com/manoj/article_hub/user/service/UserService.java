@@ -67,4 +67,5 @@ public class UserService implements HasLogger {
     }
 
     // todo: handle ExpiredJwtException somewhere, while fetching anything..
+	// todo: setCurrentUserDetailsAndTokenExpiry has to be updated for the localStorage.setItem()
 }

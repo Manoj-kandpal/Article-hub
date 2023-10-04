@@ -39,9 +39,6 @@ public class UserServiceTest {
     @Mock
     private UserMapper userMapper;
 
-    @Mock
-    private UserCredentialsService userCredentialsService;
-
     @InjectMocks
     private UserService testee;
 
