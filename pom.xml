@@ -71,6 +71,9 @@
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+<!--        Swagger URL-->
+<!--        http://localhost:8080/swagger-ui/index.html-->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

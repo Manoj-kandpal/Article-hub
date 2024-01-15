@@ -23,7 +23,7 @@ public class UserRepositoryTest extends IntegrationTest {
         userRepository.deleteById(UserTestUtil.USER_ID);
         userRepository.saveAndFlush(UserTestUtil.createUser());
 
-        UserEntity result = userRepository.getUserByUsername(UserTestUtil.EMAIL);
+        UserEntity result = userRepository.findByUsername(UserTestUtil.EMAIL).get();
 
 //        Assert.assertEquals(UserTestUtil.USER_ID, result.getId());
         Assert.assertEquals(UserTestUtil.FIRST_NAME, result.getFirstName());

@@ -43,10 +43,10 @@ public class UserController implements HasLogger {
             AuthenticationResponse response = userService.loginUser(userLoginDto);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (UserNotFoundException e) {
-            getLogger().error("User Login failed, reason: {}", e.getMessage());
+            getLogger().error("User Login failed, reason: {}.", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
-            getLogger().error("User Login failed, reason: {}. {}", e.getMessage(), e.getCause().getCause().getMessage());
+            getLogger().error("User Login failed, reason: {}.", e.getMessage());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }

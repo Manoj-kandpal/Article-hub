@@ -60,10 +60,8 @@ public class UserServiceTest {
         Mockito.when(userMapper.toEntity(Mockito.eq(userCreationDto))).thenReturn(user);
         Mockito.when(userMapper.toDto(Mockito.eq(user_saved))).thenReturn(userDto);
         Mockito.when(userRepository.save(Mockito.eq(user))).thenReturn(user_saved);
-        Mockito.when(userRepository.getUserByUsername(Mockito.eq(EMAIL))).thenReturn(user_saved);
+        Mockito.when(userRepository.findByUsername(Mockito.eq(EMAIL))).thenReturn(Optional.of(user_saved));
         Mockito.when(userRepository.findById(Mockito.eq(user_saved.getId()))).thenReturn(Optional.of(user_saved));
-        Mockito.when(userCredentialsService.verifyUser(Mockito.eq(user_saved), Mockito.eq(PASSWORD))).thenReturn(true);
-        Mockito.when(userCredentialsService.verifyUser(Mockito.eq(user_saved), Mockito.eq(INCORRECT_PASSWORD))).thenReturn(false);
     }
 
     @Test

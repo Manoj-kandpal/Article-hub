@@ -1,29 +1,30 @@
 package com.manoj.article_hub.article.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.manoj.article_hub.article.dto.ArticleDto;
 import com.manoj.article_hub.article.dto.CreateArticleDto;
 import com.manoj.article_hub.article.entity.ArticleEntity;
 import com.manoj.article_hub.article.mapper.ArticleMapper;
 import com.manoj.article_hub.article.service.ArticleService;
 import com.manoj.article_hub.common.HasLogger;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(ArticleController.ENDPOINT_PATH_ROOT)
+@SecurityRequirement(name = "bearerAuth")
+@Tag(name = "Article")
 public class ArticleController implements HasLogger {
 
     public static final String ENDPOINT_PATH_ROOT = "/api/article";
@@ -41,12 +42,25 @@ public class ArticleController implements HasLogger {
         return articleService.getAllArticles();
     }
 
+    @Operation(
+            description = "Post endpoint for creating an article",
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200"
+                    )
+            }
+
+    )
     @PostMapping
     public ArticleEntity createArticle(@RequestBody CreateArticleDto createArticleDto) {
+        Authentication authToken = SecurityContextHolder.getContext().getAuthentication();
         return articleService.create(createArticleDto);
     }
 
     @DeleteMapping(ENDPOINT_PATH_ARTICLE)
+//    To hide from openapi documentation
+//    @Hidden
     public ResponseEntity<ArticleDto> deleteArticle(@PathVariable(name = "articleId") Long id) {
         if (id == null) {
             getLogger().warn(ARTICLE_ID_CANT_BE_NULL);
@@ -82,5 +96,11 @@ public class ArticleController implements HasLogger {
             return new ResponseEntity<>(articleDto, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(path = "/hello")
+    @Hidden
+    public String hello() {
+        return "hello";
     }
 }

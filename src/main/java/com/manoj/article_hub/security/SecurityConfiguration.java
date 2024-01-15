@@ -17,14 +17,33 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtAuthenticationFilter jwtAuthFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll()
+//                )
+//                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authenticationProvider(authenticationProvider)
+//                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/**").permitAll()
-                                                    .requestMatchers("/api/article")
-                                                    .permitAll()
-                                                    .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                                .requestMatchers(
+                                        "/api/user/**",
+                                        "/api/article",
+
+//                                for swagger docs
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**"
+
+//
+                                ).permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
@@ -33,7 +52,3 @@ public class SecurityConfiguration {
 
     }
 }
-
-//.authorizeHttpRequests(auth -> auth.requestMatchers("/api/user/**").permitAll()
-//        .anyRequest().authenticated()
-//        )
