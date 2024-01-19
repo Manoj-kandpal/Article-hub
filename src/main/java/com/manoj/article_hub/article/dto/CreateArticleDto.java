@@ -15,5 +15,4 @@ public class CreateArticleDto {
     private String title;
     private String description;
     private String importance;
-    private Long userId;
 }

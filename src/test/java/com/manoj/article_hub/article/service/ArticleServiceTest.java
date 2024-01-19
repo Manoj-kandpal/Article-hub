@@ -85,7 +85,7 @@ public class ArticleServiceTest {
         UserEntity user = UserTestUtil.createUser();
         ArticleEntity article = ArticleTestUtil.createArticle();
 
-        Mockito.when(userService.checkUserExist(articleDto.getUserId())).thenReturn(Optional.of(user));
+//        Mockito.when(userService.checkUserExist(articleDto.getUserId())).thenReturn(Optional.of(user));
         Mockito.when(articleMapper.toEntity(Mockito.eq(articleDto), Mockito.eq(user))).thenReturn(article);
         Mockito.when(articleRepository.saveAndFlush(Mockito.eq(article))).thenReturn(article);
 

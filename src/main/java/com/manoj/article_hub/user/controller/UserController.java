@@ -27,27 +27,27 @@ public class UserController implements HasLogger {
     private UserService userService;
 
     @PostMapping(ENDPOINT_PATH_REGISTER)
-    public ResponseEntity<AuthenticationResponse> addUser(@RequestBody UserCreationDto userInput) {
+    public ResponseEntity<Object> addUser(@RequestBody UserCreationDto userInput) {
         try {
             AuthenticationResponse response = userService.addUser(userInput);
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(new com.manoj.article_hub.common.dto.ApiResponse("success", response));
         } catch (Exception e) {
             getLogger().error("User creation failed, reason: {}. {}", e.getMessage(), e.getCause().getCause().getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("success", e.getMessage()));
         }
     }
 
     @PostMapping(ENDPOINT_PATH_LOGIN)
-    public ResponseEntity<?> loginUser(@RequestBody UserLoginDto userLoginDto) {
+    public ResponseEntity<Object> loginUser(@RequestBody UserLoginDto userLoginDto) {
         try {
             AuthenticationResponse response = userService.loginUser(userLoginDto);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(new com.manoj.article_hub.common.dto.ApiResponse("success", response));
         } catch (UserNotFoundException e) {
             getLogger().error("User Login failed, reason: {}.", e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("error", e.getMessage()));
         } catch (Exception e) {
             getLogger().error("User Login failed, reason: {}.", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("error", e.getMessage()));
         }
     }
 

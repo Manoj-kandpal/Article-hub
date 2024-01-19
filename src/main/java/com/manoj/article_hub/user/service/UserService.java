@@ -66,6 +66,11 @@ public class UserService implements HasLogger {
         return userRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    public Optional<UserEntity> checkUserExist(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     // todo: handle ExpiredJwtException somewhere, while fetching anything..
 	// todo: setCurrentUserDetailsAndTokenExpiry has to be updated for the localStorage.setItem()
 }

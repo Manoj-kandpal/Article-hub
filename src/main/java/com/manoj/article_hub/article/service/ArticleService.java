@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +25,10 @@ public class ArticleService implements HasLogger {
 
     private static final String ARTICLE_IS_NOT_AVAILABLE = "Article with ID {} is not available.";
     private static final String ARTICLE_DELETED = "Article with title {} deleted.";
-    private static final String USER_DOES_NOT_EXIST = "User with id {} doesn't exist.";
+
+    //todo:
+//    make these constants a new file and use from there, this variable also used in jwtAuthenticationFilter
+    private static final String USER_DOES_NOT_EXIST = "User with username {} doesn't exist.";
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -47,16 +53,19 @@ public class ArticleService implements HasLogger {
             getLogger().error("Article can't be created if data is null");
             return null;
         }
+
+        //while setting up context, we can use credentials as well, instead of passing userpassword in principal
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         //to add validations that our data has the non-null fields or not!!
-        Optional<UserEntity> author = userService.checkUserExist(data.getUserId());
+        Optional<UserEntity> author = userService.checkUserExist(userDetails.getUsername());
         if (author.isPresent()) {
             ArticleEntity entity = mapper.toEntity(data, author.get());
             ArticleEntity savedArticle = articleRepository.saveAndFlush(entity);
             getLogger().info("Article {} created.", savedArticle.getTitle());
             return savedArticle;
         } else {
-            getLogger().error(USER_DOES_NOT_EXIST, data.getUserId());
-            throw new NotFoundException("User", "Id", data.getUserId());
+            getLogger().error(USER_DOES_NOT_EXIST, userDetails.getUsername());
+            throw new NotFoundException("User", "Username", userDetails.getUsername());
         }
 
     }
