@@ -39,9 +39,6 @@ public class UserEntity implements UserDetails {
     @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "password")
-    private String password;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -53,7 +50,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return null;
     }
 
     @Override

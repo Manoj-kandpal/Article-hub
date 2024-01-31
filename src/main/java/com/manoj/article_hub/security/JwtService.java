@@ -22,6 +22,7 @@ public class JwtService {
     private static final String SECRET_KEY = "7g7B0LDyFo0couV9qw6Gaw8JLg0O9ayV4hcZ1vMFX17frdyDmqBaZUBspb7M8imC";
     private static final String COOKIE_NAME = "token";
     private static final int COOKIE_VALIDITY = 24 * 60 * 60;
+    private static final int TOKEN_EXPIRY_VALIDITY_MILLISECONDS = 24*60*60*1000;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -56,7 +57,7 @@ public class JwtService {
                 .addClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 24*60*60*1000))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRY_VALIDITY_MILLISECONDS))
                 .signWith(getSignInKey())
                 .compact();
     }

@@ -27,7 +27,7 @@ public abstract class UserMapper implements HasLogger {
                 .firstName(data.getFirstName())
                 .lastName(data.getLastName())
                 .username(data.getEmail())
-                .password(encryptionService.encryptPassword(data.getPassword()))
+//                .password(encryptionService.encryptPassword(data.getPassword()))
                 .role(Role.USER)
                 .build();
     }

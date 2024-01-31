@@ -1,15 +1,5 @@
 package com.manoj.article_hub.article.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.manoj.article_hub.article.dto.CreateArticleDto;
 import com.manoj.article_hub.article.entity.ArticleEntity;
 import com.manoj.article_hub.article.mapper.ArticleMapper;
@@ -19,6 +9,14 @@ import com.manoj.article_hub.common.HasLogger;
 import com.manoj.article_hub.exception.NotFoundException;
 import com.manoj.article_hub.user.entity.UserEntity;
 import com.manoj.article_hub.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ArticleService implements HasLogger {
@@ -29,6 +27,7 @@ public class ArticleService implements HasLogger {
     //todo:
 //    make these constants a new file and use from there, this variable also used in jwtAuthenticationFilter
     private static final String USER_DOES_NOT_EXIST = "User with username {} doesn't exist.";
+    private static final String USER_NOT_LOGGED_IN = "User not logged in! Please log in first and try again";
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -55,17 +54,22 @@ public class ArticleService implements HasLogger {
         }
 
         //while setting up context, we can use credentials as well, instead of passing userpassword in principal
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //to add validations that our data has the non-null fields or not!!
-        Optional<UserEntity> author = userService.checkUserExist(userDetails.getUsername());
-        if (author.isPresent()) {
-            ArticleEntity entity = mapper.toEntity(data, author.get());
-            ArticleEntity savedArticle = articleRepository.saveAndFlush(entity);
-            getLogger().info("Article {} created.", savedArticle.getTitle());
-            return savedArticle;
+        Object securityContextObject = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (securityContextObject instanceof UserDetails userDetails) {
+
+            //to add validations that our data has the non-null fields or not!!
+            Optional<UserEntity> author = userService.checkUserExist(userDetails.getUsername());
+            if (author.isPresent()) {
+                ArticleEntity entity = mapper.toEntity(data, author.get());
+                ArticleEntity savedArticle = articleRepository.saveAndFlush(entity);
+                getLogger().info("Article {} created.", savedArticle.getTitle());
+                return savedArticle;
+            } else {
+                getLogger().error(USER_DOES_NOT_EXIST, userDetails.getUsername());
+                throw new NotFoundException("User", "Username", userDetails.getUsername());
+            }
         } else {
-            getLogger().error(USER_DOES_NOT_EXIST, userDetails.getUsername());
-            throw new NotFoundException("User", "Username", userDetails.getUsername());
+            throw new RuntimeException(USER_NOT_LOGGED_IN);
         }
 
     }

@@ -1,13 +1,17 @@
 package com.manoj.article_hub.user.service;
 
+import com.manoj.article_hub.exception.WrongCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EncryptionService {
 
-    public boolean verifyPassword(String rawPassword, String encodedPassword) {
-        return getPasswordEncoder().matches(rawPassword, encodedPassword);
+    public void verifyPassword(String rawPassword, String encodedPassword) {
+        boolean correctPassword = getPasswordEncoder().matches(rawPassword, encodedPassword);
+        if(!correctPassword){
+            throw new WrongCredentialsException();
+        }
     }
 
     public BCryptPasswordEncoder getPasswordEncoder() {

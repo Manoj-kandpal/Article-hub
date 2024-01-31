@@ -1,8 +1,11 @@
 package com.manoj.article_hub.user.controller;
 
+import com.manoj.article_hub.common.HasLogger;
 import com.manoj.article_hub.exception.UserNotFoundException;
 import com.manoj.article_hub.user.dto.AuthenticationResponse;
 import com.manoj.article_hub.user.dto.UserCreationDto;
+import com.manoj.article_hub.user.dto.UserLoginDto;
+import com.manoj.article_hub.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.manoj.article_hub.common.HasLogger;
-import com.manoj.article_hub.user.dto.UserLoginDto;
-import com.manoj.article_hub.user.service.UserService;
 
 @RestController
 @RequestMapping(UserController.ENDPOINT_PATH_ROOT)
@@ -33,22 +32,25 @@ public class UserController implements HasLogger {
             return ResponseEntity.status(HttpStatus.CREATED).body(new com.manoj.article_hub.common.dto.ApiResponse("success", response));
         } catch (Exception e) {
             getLogger().error("User creation failed, reason: {}. {}", e.getMessage(), e.getCause().getCause().getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("success", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("error", e.getCause() != null ? e.getCause().getCause().getMessage() : e.getMessage()));
         }
     }
 
     @PostMapping(ENDPOINT_PATH_LOGIN)
-    public ResponseEntity<Object> loginUser(@RequestBody UserLoginDto userLoginDto) {
-        try {
-            AuthenticationResponse response = userService.loginUser(userLoginDto);
-            return ResponseEntity.status(HttpStatus.OK).body(new com.manoj.article_hub.common.dto.ApiResponse("success", response));
-        } catch (UserNotFoundException e) {
-            getLogger().error("User Login failed, reason: {}.", e.getMessage());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("error", e.getMessage()));
-        } catch (Exception e) {
-            getLogger().error("User Login failed, reason: {}.", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("error", e.getMessage()));
-        }
+//    public ResponseEntity<Object> loginUser(@RequestBody UserLoginDto userLoginDto) {
+    public AuthenticationResponse loginUser(@RequestBody UserLoginDto userLoginDto) {
+
+        return userService.loginUser(userLoginDto);
+//        try {
+//            AuthenticationResponse response = userService.loginUser(userLoginDto);
+//            return ResponseEntity.status(HttpStatus.OK).body(new com.manoj.article_hub.common.dto.ApiResponse("success", response));
+//        } catch (UserNotFoundException e) {
+//            getLogger().error("User Login failed, reason: {}.", e.getMessage());
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("error", e.getMessage()));
+//        } catch (Exception e) {
+//            getLogger().error("User Login failed, reason: {}.", e.getMessage());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new com.manoj.article_hub.common.dto.ApiErrorResponse("error", e.getMessage()));
+//        }
     }
 
     // todo:

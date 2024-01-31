@@ -31,6 +31,8 @@ public class UserService implements HasLogger {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserCredentialsService userCredentialsService;
 
     @Transactional
     public AuthenticationResponse addUser(UserCreationDto data) {
@@ -40,6 +42,7 @@ public class UserService implements HasLogger {
         }
         UserEntity entity = userMapper.toEntity(data);
         UserEntity savedEntity = userRepository.save(entity);
+        userCredentialsService.create(savedEntity, data.getPassword());
         getLogger().info("User Created: {}", savedEntity.getFirstName());
 
         String jwtToken = jwtService.generateTokenWithNameAndEmail(savedEntity);
@@ -52,11 +55,15 @@ public class UserService implements HasLogger {
     public AuthenticationResponse loginUser(UserLoginDto data) {
         Validate.notNull(data, "Login details can't be null");
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword()));
         UserEntity userEntity = userRepository.findByUsername(data.getEmail()).orElseThrow(() -> {
             getLogger().info(USER_NOT_FOUND, data.getEmail());
             return new UserNotFoundException(data.getEmail());
         });
+
+//        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword()));
+
+        userCredentialsService.verifyUser(userEntity, data.getPassword());
+
         String jwt = jwtService.generateToken(userEntity);
         return AuthenticationResponse.builder().token(jwt).build();
     }

@@ -22,7 +22,8 @@ public class NotFoundException extends RuntimeException {
     }
 
     public NotFoundException(String entityName, String propertyName, Object propertyValue) {
-        super(String.join("%s not found with %s: %s", entityName, propertyName, propertyValue.toString()));
+//        super(String.join("{} not found with {}: {}", entityName, propertyName, propertyValue.toString()));
+        super(entityName + " not found with " + propertyName + ": " + propertyValue.toString());
         this.entityName = entityName;
         this.propertyName = propertyName;
         this.propertyValue = propertyValue;
